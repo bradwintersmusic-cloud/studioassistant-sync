@@ -12,7 +12,7 @@ const path = require('path');
 // ─── Config ────────────────────────────────────────────────────────────────────
 
 const BASE_URL     = 'https://app.studioassistant.io';
-const FACILITY_IDS = [7785, 7807, 7808];    // OceanWay, 34MSE, BMRC
+const FACILITY_IDS = [7807, 7808];    // 34MSE, BMRC
 const TIMEZONE     = 'America/Chicago';
 const OUTPUT_FILE  = path.join(__dirname, '../index.html');
 
@@ -24,9 +24,20 @@ const RANGE_DAYS = 1;
 
 function getDateRange() {
   const now = new Date();
-  const localMidnight = new Date(now.toLocaleDateString('en-CA', { timeZone: TIMEZONE }) + 'T00:00:00');
-  const offset = -localMidnight.getTimezoneOffset() * 60000;
-  const start = new Date(localMidnight.getTime() - offset);
+  const dateStr = now.toLocaleDateString('en-CA', { timeZone: TIMEZONE }); // "2026-06-23"
+
+  // Get Chicago's actual UTC offset for today (handles CDT vs CST automatically)
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: TIMEZONE,
+    timeZoneName: 'shortOffset'
+  }).formatToParts(now);
+  const offsetStr = parts.find(p => p.type === 'timeZoneName').value; // "GMT-5" or "GMT-6"
+  const offsetHours = parseInt(offsetStr.replace('GMT', '')) || -5;
+  const offsetFormatted = offsetHours >= 0
+    ? `+${String(offsetHours).padStart(2, '0')}:00`
+    : `-${String(Math.abs(offsetHours)).padStart(2, '0')}:00`;
+
+  const start = new Date(`${dateStr}T00:00:00${offsetFormatted}`);
   const end = new Date(start);
   end.setDate(end.getDate() + RANGE_DAYS);
   return { start: start.toISOString(), end: end.toISOString() };
@@ -95,7 +106,7 @@ async function fetchFacilitySessions(accessToken, facilityId, start, end) {
 function processSessions(raw) {
   return raw
     // Drop anything without a booking (blackouts, placeholders, etc.)
-    .filter(s => s.booking !== null)
+    .filter(s => s.type !== 'i' && (s.stamp?.contact_name || s.stamp?.service === 'Class' || s.snippet))
     // Shape each session into what we need
     .map(s => ({
       id:             s.id,
