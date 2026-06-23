@@ -103,10 +103,15 @@ async function fetchFacilitySessions(accessToken, facilityId, start, end) {
 
 // ─── Data processing ───────────────────────────────────────────────────────────
 
-function processSessions(raw) {
+function processSessions(raw, start, end) {
   return raw
     // Drop anything without a booking (blackouts, placeholders, etc.)
-    .filter(s => s.type !== 'i' && (s.stamp?.contact_name || s.stamp?.service === 'Class' || s.snippet))
+    .filter(s => {
+  if (s.type === 'i' && !s.stamp?.contact_name) return false;
+  if (new Date(s.start) < new Date(start)) return false;
+  if (new Date(s.start) >= new Date(end)) return false;
+  return s.stamp?.contact_name || s.stamp?.service === 'Class' || s.snippet;
+})
     // Shape each session into what we need
     .map(s => ({
       id:             s.id,
@@ -372,7 +377,7 @@ async function main() {
     allRaw.push(...sessions);
   }
 
-  const sessions = processSessions(allRaw);
+  const sessions = processSessions(allRaw, start, end);
   console.log(`✓ ${sessions.length} sessions after filtering\n`);
 
   const generatedAt = new Date().toLocaleString('en-US', {
