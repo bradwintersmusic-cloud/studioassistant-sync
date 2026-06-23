@@ -352,7 +352,7 @@ function buildHTML(sessions, generatedAt) {
 </head>
 <body>
   <header class="page-header">
-    <div class="wordmark">Belmont University · Audio Production</div>
+    <div class="wordmark">Belmont University · AET</div>
     <h1>Studio Schedule</h1>
     <div class="meta">Generated ${escapeHtml(generatedAt)} · ${sessions.length} session${sessions.length !== 1 ? 's' : ''}</div>
   </header>
