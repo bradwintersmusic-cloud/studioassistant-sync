@@ -14,7 +14,7 @@ const path = require('path');
 const BASE_URL     = 'https://app.studioassistant.io';
 const FACILITY_IDS = [7785, 7807, 7808];    // OceanWay, 34MSE, BMRC
 const TIMEZONE     = 'America/Chicago';
-const OUTPUT_FILE  = path.join(__dirname, '../output/index.html');
+const OUTPUT_FILE  = path.join(__dirname, '../index.html');
 
 // Date window: pulls sessions starting today (UTC midnight) for the next N days.
 // Increase RANGE_DAYS if you want a wider lookahead.
