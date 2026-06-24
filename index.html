@@ -126,6 +126,37 @@
       color: var(--muted);
     }
 
+    .tabs {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .tab-btn {
+        padding: 6px 18px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--muted);
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+
+    .tab-btn.active {
+        background: var(--accent-bg);
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .tab-btn:hover:not(.active) {
+        border-color: var(--muted);
+        color: var(--text);
+    }
+
     /* ── Table ── */
     table {
       width: 100%;
@@ -190,7 +221,11 @@
   <header class="page-header">
     <div class="wordmark">Belmont University · AET</div>
     <h1>Studio Schedule</h1>
-    <div class="meta">Generated Wed, Jun 24, 2:14 PM · 6 sessions</div>
+    <div class="meta">Generated Wed, Jun 24, 2:24 PM · 10 sessions</div>
+    <div class="tabs">
+  <button class="tab-btn active" data-date="2026-06-24" onclick="filterByDate('2026-06-24')">Today</button>
+  <button class="tab-btn" data-date="2026-06-25" onclick="filterByDate('2026-06-25')">Tomorrow</button>
+</div>
   </header>
   <main class="content">
     
@@ -215,11 +250,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <tr data-date="2026-06-24">
               <td class="col-date">Wed, Jun 24</td>
               <td class="col-name">Johnny Mercer Songwriters Project</td>
               <td class="col-type">Event</td>
               <td class="col-time">9:00 AM</td>
+              <td class="col-time">9:00 PM</td>
+            </tr>
+            <tr data-date="2026-06-25">
+              <td class="col-date">Thu, Jun 25</td>
+              <td class="col-name">W.O. Smith project load-in and setup</td>
+              <td class="col-type">Recording</td>
+              <td class="col-time">2:00 PM</td>
               <td class="col-time">9:00 PM</td>
             </tr>
             </tbody>
@@ -249,19 +291,40 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <tr data-date="2026-06-24">
               <td class="col-date">Wed, Jun 24</td>
               <td class="col-name">AET2090 - Wildrick</td>
               <td class="col-type">Class</td>
               <td class="col-time">9:00 AM</td>
               <td class="col-time">11:30 AM</td>
             </tr>
-            <tr>
+            <tr data-date="2026-06-24">
               <td class="col-date">Wed, Jun 24</td>
               <td class="col-name">Brad Winters</td>
               <td class="col-type">AET 3190 REM A Practice Time</td>
               <td class="col-time">8:00 PM</td>
               <td class="col-time">9:00 PM</td>
+            </tr>
+            <tr data-date="2026-06-25">
+              <td class="col-date">Thu, Jun 25</td>
+              <td class="col-name">AET3190 - Richter</td>
+              <td class="col-type">Class</td>
+              <td class="col-time">9:00 AM</td>
+              <td class="col-time">11:30 AM</td>
+            </tr>
+            <tr data-date="2026-06-25">
+              <td class="col-date">Thu, Jun 25</td>
+              <td class="col-name">Cash Bourgoyne</td>
+              <td class="col-type">AET 3190 REM A Practice Time</td>
+              <td class="col-time">4:30 PM</td>
+              <td class="col-time">5:30 PM</td>
+            </tr>
+            <tr data-date="2026-06-25">
+              <td class="col-date">Thu, Jun 25</td>
+              <td class="col-name">Cash Bourgoyne</td>
+              <td class="col-type">AET 3190 Tracking</td>
+              <td class="col-time">5:30 PM</td>
+              <td class="col-time">9:30 PM</td>
             </tr>
             </tbody>
         </table>
@@ -281,7 +344,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <tr data-date="2026-06-24">
               <td class="col-date">Wed, Jun 24</td>
               <td class="col-name">Soupless/Emmie Whorton</td>
               <td class="col-type">Interview</td>
@@ -306,7 +369,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <tr data-date="2026-06-24">
               <td class="col-date">Wed, Jun 24</td>
               <td class="col-name">october.lyons</td>
               <td class="col-type">AET 3190 REM Edit Bay Access</td>
@@ -331,7 +394,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <tr data-date="2026-06-24">
               <td class="col-date">Wed, Jun 24</td>
               <td class="col-name">Brandon Smith 3370 OD</td>
               <td class="col-type">Overdubs</td>
@@ -354,5 +417,28 @@
       icon.classList.toggle('collapsed', !isHidden);
     }
   </script>
+  <script>
+  const todayKey = '2026-06-24';
+
+  function filterByDate(dateKey) {
+    document.querySelectorAll('tbody tr').forEach(row => {
+      row.style.display = row.dataset.date === dateKey ? '' : 'none';
+    });
+    document.querySelectorAll('.studio-block').forEach(block => {
+      const visible = block.querySelectorAll('tbody tr:not([style*="display: none"])').length;
+      block.style.display = visible === 0 ? 'none' : '';
+    });
+    document.querySelectorAll('.facility-content').forEach(content => {
+      const visible = content.querySelectorAll('.studio-block:not([style*="display: none"])').length;
+      content.parentElement.style.display = visible === 0 ? 'none' : '';
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.date === dateKey);
+    });
+  }
+
+  // Show today by default on load
+  filterByDate(todayKey);
+</script>
 </body>
 </html>
