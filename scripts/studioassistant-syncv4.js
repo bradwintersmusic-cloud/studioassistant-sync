@@ -24,7 +24,7 @@ const RANGE_DAYS = 1;
 
 function getDateRange() {
   const now = new Date();
-  const dateStr = now.toLocaleDateString('en-CA', { timeZone: TIMEZONE }); // "2026-06-23"
+  const dateStr = now.toLocaleDateString('en-CA', { timeZone: TIMEZONE }); // "2026-06-24"
 
   // Get Chicago's actual UTC offset for today (handles CDT vs CST automatically)
   const parts = new Intl.DateTimeFormat('en-US', {
