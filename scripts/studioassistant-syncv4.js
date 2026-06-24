@@ -120,7 +120,7 @@ function processSessions(raw, start, end) {
       student:        s.stamp.contact_name || s.snippet || '—',
       start:          s.start,
       end:            s.end,
-      sessionType: s.stamp?.project || s.stamp?.service || '',
+      sessionType:    s.stamp?.project || s.stamp?.service || '',
       dateLabel:      formatDate(s.start),
       startLabel:     formatTime(s.start),
       endLabel:       formatTime(s.end),
@@ -194,7 +194,7 @@ function buildHTML(sessions, generatedAt) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Studio Schedule — Belmont Audio</title>
+  <title>Studio Schedule — Belmont AET</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
