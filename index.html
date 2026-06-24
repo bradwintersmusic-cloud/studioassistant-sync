@@ -40,7 +40,7 @@
 
     .wordmark {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
+      font-size: 13px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--accent);
@@ -79,6 +79,17 @@
       text-transform: uppercase;
       color: var(--accent);
       margin-bottom: 18px;
+      user-select: none;
+    }
+
+    .toggle-icon {
+      margin-left: auto;
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+
+    .toggle-icon.collapsed {
+      transform: rotate(-90deg);
     }
 
     .dot {
@@ -179,14 +190,16 @@
   <header class="page-header">
     <div class="wordmark">Belmont University · AET</div>
     <h1>Studio Schedule</h1>
-    <div class="meta">Generated Wed, Jun 24, 7:49 AM · 4 sessions</div>
+    <div class="meta">Generated Wed, Jun 24, 8:32 AM · 4 sessions</div>
   </header>
   <main class="content">
     
       <section class="facility-block">
-        <div class="facility-header">
+        <div class="facility-header" onclick="toggleFacility(this)" style="cursor:pointer;">
           <span class="dot"></span>34 Music Square East
+          <span class="toggle-icon">▾</span>
         </div>
+        <div class="facility-content">
         
             <div class="studio-block">
         <div class="studio-header">Columbia Studio A</div>
@@ -213,11 +226,14 @@
         </table>
         </div>
     </div>
+        </div>
       </section>
       <section class="facility-block">
-        <div class="facility-header">
+        <div class="facility-header" onclick="toggleFacility(this)" style="cursor:pointer;">
           <span class="dot"></span>Barbara Massey Rogers Center
+          <span class="toggle-icon">▾</span>
         </div>
+        <div class="facility-content">
         
             <div class="studio-block">
         <div class="studio-header">Studio A</div>
@@ -294,7 +310,17 @@
         </table>
         </div>
     </div>
+        </div>
       </section>
   </main>
+  <script>
+    function toggleFacility(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.toggle-icon');
+      const isHidden = content.style.display === 'none';
+      content.style.display = isHidden ? 'block' : 'none';
+      icon.classList.toggle('collapsed', !isHidden);
+    }
+  </script>
 </body>
 </html>

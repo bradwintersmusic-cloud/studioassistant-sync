@@ -178,10 +178,13 @@ function buildHTML(sessions, generatedAt) {
 
     return `
       <section class="facility-block">
-        <div class="facility-header">
+        <div class="facility-header" onclick="toggleFacility(this)" style="cursor:pointer;">
           <span class="dot"></span>${escapeHtml(facility)}
+          <span class="toggle-icon">▾</span>
         </div>
+        <div class="facility-content">
         ${studiosHTML}
+        </div>
       </section>`;
   }).join('');
 
@@ -231,7 +234,7 @@ function buildHTML(sessions, generatedAt) {
 
     .wordmark {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
+      font-size: 13px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--accent);
@@ -270,6 +273,17 @@ function buildHTML(sessions, generatedAt) {
       text-transform: uppercase;
       color: var(--accent);
       margin-bottom: 18px;
+      user-select: none;
+    }
+
+    .toggle-icon {
+      margin-left: auto;
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+
+    .toggle-icon.collapsed {
+      transform: rotate(-90deg);
     }
 
     .dot {
@@ -375,6 +389,15 @@ function buildHTML(sessions, generatedAt) {
   <main class="content">
     ${body}
   </main>
+  <script>
+    function toggleFacility(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.toggle-icon');
+      const isHidden = content.style.display === 'none';
+      content.style.display = isHidden ? 'block' : 'none';
+      icon.classList.toggle('collapsed', !isHidden);
+    }
+  </script>
 </body>
 </html>`;
 }
