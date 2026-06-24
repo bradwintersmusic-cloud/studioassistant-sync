@@ -156,22 +156,24 @@ function buildHTML(sessions, generatedAt) {
             </tr>`).join('');
 
       return `
-        <div class="studio-block">
-          <div class="studio-header">${escapeHtml(studio)}</div>
-          <table>
+            <div class="studio-block">
+        <div class="studio-header">${escapeHtml(studio)}</div>
+        <div class="table-scroll">
+        <table>
             <thead>
-              <tr>
+            <tr>
                 <th>Date</th>
                 <th>Name</th>
                 <th>Type</th>
                 <th>Start</th>
                 <th>End</th>
-              </tr>
+            </tr>
             </thead>
             <tbody>${rowsHTML}
             </tbody>
-          </table>
-        </div>`;
+        </table>
+        </div>
+    </div>`;
     }).join('');
 
     return `
@@ -285,6 +287,11 @@ function buildHTML(sessions, generatedAt) {
       border-radius: 5px;
       overflow: hidden;
       background: var(--surface);
+    }
+
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .studio-header {
