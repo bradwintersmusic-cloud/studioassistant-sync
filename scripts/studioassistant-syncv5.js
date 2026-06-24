@@ -416,7 +416,7 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
   <header class="page-header">
     <div class="wordmark">Belmont University · AET</div>
     <h1>Studio Schedule</h1>
-    <div class="meta">Generated ${escapeHtml(generatedAt)} · ${sessions.length} session${sessions.length !== 1 ? 's' : ''}</div>
+    <div class="meta">Generated ${escapeHtml(generatedAt)} · <span id="session-count"></span></div>
     <div class="tabs">
   <button class="tab-btn active" data-date="${todayKey}" onclick="filterByDate('${todayKey}')">Today</button>
   <button class="tab-btn" data-date="${tomorrowKey}" onclick="filterByDate('${tomorrowKey}')">Tomorrow</button>
@@ -435,8 +435,6 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
     }
   </script>
   <script>
-  const todayKey = '${todayKey}';
-
   function filterByDate(dateKey) {
     document.querySelectorAll('tbody tr').forEach(row => {
       row.style.display = row.dataset.date === dateKey ? '' : 'none';
@@ -452,10 +450,11 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.date === dateKey);
     });
+    const count = document.querySelectorAll('tbody tr:not([style*="display: none"])').length;
+    document.getElementById('session-count').textContent = count + ' session' + (count !== 1 ? 's' : '');
   }
 
-  // Show today by default on load
-  filterByDate(todayKey);
+  filterByDate(document.querySelector('.tab-btn.active').dataset.date);
 </script>
 </body>
 </html>`;
