@@ -212,7 +212,7 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
       --accent:     #c8a86b;
       --accent-bg:  rgba(200, 168, 107, 0.10);
       --text:       #e6e2d9;
-      --muted:      #62627a;
+      --muted:      #8f8e9d;
       --blue:       #5b9cf6;
     }
 
@@ -379,7 +379,7 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--accent-bg); }
 
-    td { padding: 11px 16px; vertical-align: middle; }
+    td { padding: 9px 12px; vertical-align: middle; }
 
     .col-date {
       color: var(--muted);
