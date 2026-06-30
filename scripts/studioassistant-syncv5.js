@@ -410,8 +410,226 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
       color: var(--muted);
       font-style: italic;
     }
+
+    .belmont-nav {
+    position: fixed;
+    z-index: 200;
+    top: 24px;
+    left: 24px;
+  }
+ 
+  @media (max-width: 560px) {
+    .belmont-nav {
+      top: auto;
+      left: auto;
+      bottom: 20px;
+      right: 20px;
+    }
+  }
+ 
+  .belmont-nav-toggle {
+    width: 38px;
+    height: 38px;
+    background: var(--surface, #13131b);
+    border: 1.5px solid var(--accent, #c8a86b);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  }
+ 
+  .belmont-nav-toggle:hover {
+    background: var(--surface2, #1b1b26);
+  }
+ 
+  .belmont-nav-toggle svg {
+    width: 16px;
+    height: 16px;
+  }
+ 
+  .belmont-nav-toggle svg rect {
+    fill: var(--accent, #c8a86b);
+  }
+ 
+  /* ── Menu panel ── */
+  .belmont-nav-menu {
+    position: absolute;
+    top: 46px;
+    left: 0;
+    min-width: 196px;
+    background: var(--surface, #13131b);
+    border: 1px solid var(--border, #252533);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 16px 44px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+ 
+  @media (max-width: 560px) {
+    .belmont-nav-menu {
+      top: auto;
+      bottom: 46px;
+      left: auto;
+      right: 0;
+      transform: translateY(6px);
+    }
+  }
+ 
+  .belmont-nav.open .belmont-nav-menu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+ 
+  .belmont-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 14px;
+    text-decoration: none;
+    border-bottom: 1px solid var(--border, #252533);
+    transition: background 0.12s;
+    position: relative;
+  }
+ 
+  .belmont-nav-link:last-child { border-bottom: none; }
+ 
+  .belmont-nav-link:hover {
+    background: var(--surface2, #1b1b26);
+  }
+ 
+  .belmont-nav-link-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+    background: var(--surface2, #1b1b26);
+    border: 1px solid var(--border, #252533);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--accent, #c8a86b); /* icons use currentColor via SVG */
+  }
+ 
+  .belmont-nav-link-icon svg {
+    width: 15px;
+    height: 15px;
+  }
+ 
+  .belmont-nav-link-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent, #c8a86b);
+  }
+ 
+  /* ── Current page state: blue halo + blue text ── */
+  .belmont-nav-link.is-current .belmont-nav-link-icon {
+    color: var(--blue, #5b9cf6);
+    border-color: var(--blue, #5b9cf6);
+    box-shadow: 0 0 0 3px rgba(91, 156, 246, 0.18), 0 0 14px rgba(91, 156, 246, 0.35);
+  }
+ 
+  .belmont-nav-link.is-current .belmont-nav-link-label {
+    color: var(--blue, #5b9cf6);
+  }
   </style>
 </head>
+<div class="belmont-nav" id="belmontNav" data-current="schedule">
+  <!--
+    data-current options: "schedule" | "videos" | "policies"
+    Set this manually per page, e.g. data-current="videos" on the video library page.
+  -->
+ 
+  <button class="belmont-nav-toggle" id="belmontNavToggle" aria-label="Open navigation" aria-expanded="false">
+    <svg viewBox="0 0 16 16">
+      <rect x="2" y="4" width="12" height="1.6" rx="0.8"/>
+      <rect x="2" y="7.2" width="12" height="1.6" rx="0.8"/>
+      <rect x="2" y="10.4" width="12" height="1.6" rx="0.8"/>
+    </svg>
+  </button>
+ 
+  <nav class="belmont-nav-menu">
+ 
+    <!-- Studio Schedule -->
+    <a class="belmont-nav-link" data-page="schedule" href="https://bradwintersmusic-cloud.github.io/studioassistant-sync/">
+      <span class="belmont-nav-link-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path fill="none" stroke="currentColor" stroke-width="1.5" d="M2 4h20v18H2zm5-3v3m10-3v3M2 8h20M5 12.5h3m-3 5h3m2.5-5h3m2.5 0h3m-8.5 5h3" />
+        </svg>
+      </span>
+      <span class="belmont-nav-link-label">Studio Schedule</span>
+    </a>
+ 
+    <!-- Video Library -->
+    <a class="belmont-nav-link" data-page="videos" href="https://bradwintersmusic-cloud.github.io/studio-videos/">
+      <span class="belmont-nav-link-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10">
+            <path d="M3.5 5.5h-3v18h18v-3" />
+            <path d="M22.5 1.5h-19v19h19z" />
+            <path d="M10.5 7v8l7-4z" />
+          </g>
+        </svg>
+      </span>
+      <span class="belmont-nav-link-label">Video Library</span>
+    </a>
+ 
+    <!-- Policies -->
+    <a class="belmont-nav-link" data-page="policies" href="https://bradwintersmusic-cloud.github.io/studio-policies/">
+      <span class="belmont-nav-link-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path fill="currentColor" d="m2.3 20.28l9.6-9.6l-1.4-1.42l-.72.71a.996.996 0 0 1-1.41 0l-.71-.71a.996.996 0 0 1 0-1.41l5.66-5.66a.996.996 0 0 1 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.69l1.42 1.43a.996.996 0 0 1 1.41 0c.39.39.39 1.03 0 1.42l1.41 1.41l.71-.71c.39-.39 1.03-.39 1.42 0l.7.71c.39.39.39 1.03 0 1.42l-5.65 5.65c-.39.39-1.03.39-1.42 0l-.7-.7a.99.99 0 0 1 0-1.42l.7-.71l-1.41-1.41l-9.61 9.61a.996.996 0 0 1-1.41 0c-.39-.39-.39-1.03 0-1.42M20 19a2 2 0 0 1 2 2v1H12v-1a2 2 0 0 1 2-2z" />
+        </svg>
+      </span>
+      <span class="belmont-nav-link-label">Policies</span>
+    </a>
+ 
+  </nav>
+</div>
+ 
+<script>
+(function() {
+  var nav = document.getElementById('belmontNav');
+  var toggle = document.getElementById('belmontNavToggle');
+ 
+  var current = nav.getAttribute('data-current');
+  var links = nav.querySelectorAll('.belmont-nav-link');
+  for (var i = 0; i < links.length; i++) {
+    if (links[i].getAttribute('data-page') === current) {
+      links[i].classList.add('is-current');
+    }
+  }
+ 
+  toggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var isOpen = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+ 
+  document.addEventListener('click', function(e) {
+    if (!nav.contains(e.target)) {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+ 
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
 <body>
   <header class="page-header">
     <div class="wordmark">Belmont University · AET</div>
