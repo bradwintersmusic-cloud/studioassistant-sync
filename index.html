@@ -346,11 +346,66 @@
   .belmont-nav-link.is-current .belmont-nav-link-label {
     color: var(--blue, #5b9cf6);
   }
+
+  /* ── Animated background ── */
+.hero-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.28;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+.hero-orb-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #c8a86b 0%, transparent 70%);
+  top: -180px;
+  left: -140px;
+  animation-duration: 20s;
+}
+
+.hero-orb-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #5b9cf6 0%, transparent 70%);
+  top: 60px;
+  right: -160px;
+  animation-duration: 16s;
+  animation-delay: -6s;
+  opacity: 0.18;
+}
+
+.hero-orb-3 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #c8a86b 0%, transparent 70%);
+  bottom: 20%;
+  left: 30%;
+  animation-duration: 24s;
+  animation-delay: -10s;
+  opacity: 0.12;
+}
+
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(30px, -20px) scale(1.05); }
+  66%  { transform: translate(-20px, 30px) scale(0.97); }
+  100% { transform: translate(15px, 10px) scale(1.03); }
+}
   </style>
 </head>
 <div class="belmont-nav" id="belmontNav" data-current="schedule">
   <!--
-    data-current options: "schedule" | "videos" | "policies"
+    data-current options: "home" | "schedule" | "videos" | "policies" | "tools" | "musicians" | "resources"
     Set this manually per page, e.g. data-current="videos" on the video library page.
   -->
  
@@ -363,6 +418,16 @@
   </button>
  
   <nav class="belmont-nav-menu">
+
+    <a class="belmont-nav-link" data-page="home" href="https://bradwintersmusic-cloud.github.io/studio-home/">
+  <span class="belmont-nav-link-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/>
+      <path d="M9 21V12h6v9"/>
+    </svg>
+  </span>
+  <span class="belmont-nav-link-label">Studio Hub</span>
+</a>
  
     <!-- Studio Schedule -->
     <a class="belmont-nav-link" data-page="schedule" href="https://bradwintersmusic-cloud.github.io/studioassistant-sync/">
@@ -407,6 +472,26 @@
         </span>
         <span class="belmont-nav-link-label">Studio Tools</span>
       </a>
+
+    <a class="belmont-nav-link" data-page="musicians" href="https://bradwintersmusic-cloud.github.io/studio-musicians/">
+        <span class="belmont-nav-link-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m42.31 13.38l-25.1 3.48V7.98l25.1-3.48zm0 0v17.15m-25.1-13.67v20.88"/><circle cx="11.45" cy="37.74" r="5.76"/><circle cx="36.55" cy="30.53" r="5.76"/></svg>
+        </span>
+        <span class="belmont-nav-link-label">Session Musicians</span>
+      </a>
+
+    <a class="belmont-nav-link" data-page="resources" href="https://bradwintersmusic-cloud.github.io/studio-resources/">
+  <span class="belmont-nav-link-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+      <polyline points="10 9 9 9 8 9"/>
+    </svg>
+  </span>
+  <span class="belmont-nav-link-label">Resources</span>
+</a>
  
   </nav>
 </div>
@@ -446,10 +531,15 @@
 })();
 </script>
 <body>
+  <div class="hero-bg" aria-hidden="true">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+</div>
   <header class="page-header">
     <div class="wordmark">Belmont University · AET</div>
     <h1>Studio Schedule</h1>
-    <div class="meta">Generated Fri, Jul 3, 7:13 PM · <span id="session-count"></span></div>
+    <div class="meta">Generated Fri, Jul 3, 7:21 PM · <span id="session-count"></span></div>
     <div class="tabs">
   <button class="tab-btn active" data-date="2026-07-03" onclick="filterByDate('2026-07-03')">Today</button>
   <button class="tab-btn" data-date="2026-07-04" onclick="filterByDate('2026-07-04')">Tomorrow</button>
