@@ -539,14 +539,48 @@
   <header class="page-header">
     <div class="wordmark">Belmont University · AET</div>
     <h1>Studio Schedule</h1>
-    <div class="meta">Generated Sat, Jul 4, 11:34 AM · <span id="session-count"></span></div>
+    <div class="meta">Generated Sat, Jul 4, 11:40 AM · <span id="session-count"></span></div>
     <div class="tabs">
   <button class="tab-btn active" data-date="2026-07-04" onclick="filterByDate('2026-07-04')">Today</button>
   <button class="tab-btn" data-date="2026-07-05" onclick="filterByDate('2026-07-05')">Tomorrow</button>
 </div>
   </header>
   <main class="content">
-    <p class="empty">No sessions found for this date range.</p>
+    
+      <section class="facility-block">
+        <div class="facility-header" onclick="toggleFacility(this)" style="cursor:pointer;">
+          <span class="dot"></span>Barbara Massey Rogers Center
+          <span class="toggle-icon">▾</span>
+        </div>
+        <div class="facility-content">
+        
+            <div class="studio-block">
+        <div class="studio-header">Unknown Room</div>
+        <div class="table-scroll">
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-date="2026-07-04">
+              <td class="col-date">Sat, Jul 4</td>
+              <td class="col-name">7808 (Service 26) -</td>
+              <td class="col-type">On-Hold</td>
+              <td class="col-time">1:00 PM</td>
+              <td class="col-time">3:30 PM</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+        </div>
+      </section>
   </main>
   <script>
     function toggleFacility(header) {
