@@ -198,6 +198,10 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <title>Studio Schedule — Belmont AET</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -256,6 +260,14 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
       color: var(--muted);
       letter-spacing: 0.04em;
     }
+
+    @media (min-width: 1200px) {
+  html { zoom: 1.085; }
+}
+
+@media (min-width: 1600px) {
+  html { zoom: 1.085; }
+}
 
     /* ── Content ── */
     .content { max-width: 920px; margin: 0 auto; }
