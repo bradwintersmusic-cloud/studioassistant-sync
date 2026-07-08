@@ -260,14 +260,15 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
       color: var(--muted);
       letter-spacing: 0.04em;
     }
-
+    
+    /* ── Desktop Sizing ── */
     @media (min-width: 1200px) {
-  html { zoom: 1.085; }
-}
+      html { zoom: 1.085; }
+    }
 
-@media (min-width: 1600px) {
-  html { zoom: 1.085; }
-}
+    @media (min-width: 1600px) {
+      html { zoom: 1.085; }
+    }
 
     /* ── Content ── */
     .content { max-width: 920px; margin: 0 auto; }
@@ -555,59 +556,59 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
   }
 
   /* ── Animated background ── */
-.hero-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
 
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.28;
-  animation: drift 18s ease-in-out infinite alternate;
-}
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.28;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
 
-.hero-orb-1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #c8a86b 0%, transparent 70%);
-  top: -180px;
-  left: -140px;
-  animation-duration: 20s;
-}
+  .hero-orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #c8a86b 0%, transparent 70%);
+    top: -180px;
+    left: -140px;
+    animation-duration: 20s;
+  }
 
-.hero-orb-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #5b9cf6 0%, transparent 70%);
-  top: 60px;
-  right: -160px;
-  animation-duration: 16s;
-  animation-delay: -6s;
-  opacity: 0.18;
-}
+  .hero-orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #5b9cf6 0%, transparent 70%);
+    top: 60px;
+    right: -160px;
+    animation-duration: 16s;
+    animation-delay: -6s;
+    opacity: 0.18;
+  }
 
-.hero-orb-3 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #c8a86b 0%, transparent 70%);
-  bottom: 20%;
-  left: 30%;
-  animation-duration: 24s;
-  animation-delay: -10s;
-  opacity: 0.12;
-}
+  .hero-orb-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #c8a86b 0%, transparent 70%);
+    bottom: 20%;
+    left: 30%;
+    animation-duration: 24s;
+    animation-delay: -10s;
+    opacity: 0.12;
+  }
 
-@keyframes drift {
-  0%   { transform: translate(0, 0) scale(1); }
-  33%  { transform: translate(30px, -20px) scale(1.05); }
-  66%  { transform: translate(-20px, 30px) scale(0.97); }
-  100% { transform: translate(15px, 10px) scale(1.03); }
-}
+  @keyframes drift {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(30px, -20px) scale(1.05); }
+    66%  { transform: translate(-20px, 30px) scale(0.97); }
+    100% { transform: translate(15px, 10px) scale(1.03); }
+  }
   </style>
 </head>
 <div class="belmont-nav" id="belmontNav" data-current="schedule">
@@ -626,15 +627,21 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
  
   <nav class="belmont-nav-menu">
 
+    <!-- Studio Hub -->
     <a class="belmont-nav-link" data-page="home" href="https://bradwintersmusic-cloud.github.io/studio-home/">
-  <span class="belmont-nav-link-icon">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/>
-      <path d="M9 21V12h6v9"/>
-    </svg>
-  </span>
-  <span class="belmont-nav-link-label">Studio Hub</span>
-</a>
+      <span class="belmont-nav-link-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/>
+          <path d="M9 21V12h6v9"/>
+        </svg>
+      </span>
+      <span class="belmont-nav-link-label">Studio Hub</span>
+    </a>
+
+    <a class="belmont-nav-link" data-page="news" href="https://bradwintersmusic-cloud.github.io/studio-news/">
+      <span class="belmont-nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M21.57 3.18a.98.98 0 0 0-.92-.11L7.82 8H4.01c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h3.81l1 .39l-.47 1.4c-.33 1 .17 2.1 1.15 2.49l3.14 1.26c.24.09.49.14.74.14c.29 0 .58-.06.84-.19c.5-.23.88-.66 1.05-1.18l.42-1.27l4.93 1.9c.12.04.24.07.36.07c.2 0 .4-.06.57-.18c.27-.19.43-.5.43-.82V4c0-.33-.16-.64-.43-.82ZM4 10h3v4H4zm9.39 9.68l-3.14-1.26l.44-1.32l3.15 1.21l-.45 1.36ZM20 18.55L9 14.32V9.69l11-4.23z"/></svg></span>
+      <span class="belmont-nav-link-label">AET News</span>
+    </a>
  
     <!-- Studio Schedule -->
     <a class="belmont-nav-link" data-page="schedule" href="https://bradwintersmusic-cloud.github.io/studioassistant-sync/">
