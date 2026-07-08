@@ -609,6 +609,57 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
     66%  { transform: translate(-20px, 30px) scale(0.97); }
     100% { transform: translate(15px, 10px) scale(1.03); }
   }
+
+  /* ══════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════ */
+    .page-footer {
+      max-width: 920px;
+      margin: 64px auto 0;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 4px;
+      align-items: center;
+    }
+
+    .footer-nav a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-nav a:hover { color: var(--blue); }
+
+    .footer-nav span { opacity: 0.4; }
+
+    .page-footer .footer-meta {
+      opacity: 0.5;
+    }
+
+    .page-footer a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .page-footer a:hover { color: var(--accent); }
+
   </style>
 </head>
 <div class="belmont-nav" id="belmontNav" data-current="schedule">
@@ -793,6 +844,35 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
 
   filterByDate(document.querySelector('.tab-btn.active').dataset.date);
 </script>
+
+</div>
+
+    <footer class="page-footer">
+      <nav class="footer-nav a">
+        <a href="https://bradwintersmusic-cloud.github.io/studio-home/">Studio Hub</a>
+        <span>|</span>
+        <a href="https://bradwintersmusic-cloud.github.io/studio-news/">AET News</a>
+        <span>|</span>
+        <a href="https://bradwintersmusic-cloud.github.io/studioassistant-sync/">Studio Schedule</a>
+        <span>|</span>
+        <a href="https://bradwintersmusic-cloud.github.io/studio-videos/">Video Library</a>
+        <span>|</span>
+        <a href="https://bradwintersmusic-cloud.github.io/studio-policies/">Policies</a>
+        <span>|</span>
+        <a href="https://bradwintersmusic-cloud.github.io/studio-tools/">Studio Tools</a>
+        <span>|</span>
+        <a href="https://bradwintersmusic-cloud.github.io/studio-musicians/">Session Musicians</a>
+        <span>|</span>
+        <a href="https://bradwintersmusic-cloud.github.io/studio-resources/">Resources</a>
+        <span>|</span>
+        <a href="https://bradwintersmusic-cloud.github.io/studio-contact/">Contact</a>
+      </nav>
+      <div class="footer-meta">Belmont University &middot; Audio Engineering Technology &middot; CEMB</div>
+      <div class="footer-meta"><a href="mailto:brad.winters@belmont.edu">brad.winters@belmont.edu</a></div>
+    </footer>
+
+  </div>
+
 </body>
 </html>`;
 }
