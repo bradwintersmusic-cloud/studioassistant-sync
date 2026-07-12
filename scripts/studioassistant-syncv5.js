@@ -266,11 +266,22 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
     }
 
     h1 {
-      font-size: 30px;
+      font-size: 35px;
       font-weight: 600;
       letter-spacing: -0.025em;
       color: var(--text);
       margin-bottom: 6px;
+      text-shadow:
+      -1px 1px 1px rgba(0,0,0,0.6),
+      -2px 2px 1px rgba(0,0,0,0.6),
+      -3px 3px 1px rgba(0,0,0,0.6),
+      -4px 4px 1px rgba(0,0,0,0.5),
+      -5px 5px 1px rgba(0,0,0,0.4),
+      -6px 6px 1px rgba(0,0,0,0.3),
+      -8px 10px 6px rgba(0,0,0,0.35),
+      -10px 14px 10px rgba(0,0,0,0.2),
+      -12px 18px 28px rgba(0,0,0,0.2),
+      -14px 22px 48px rgba(0,0,0,0.3);
     }
 
     .meta {
