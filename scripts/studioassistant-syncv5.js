@@ -254,6 +254,8 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
       margin: 0 auto 52px;
       padding-bottom: 28px;
       border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
     }
 
     .wordmark {
