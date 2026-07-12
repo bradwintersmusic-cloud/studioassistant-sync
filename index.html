@@ -415,55 +415,52 @@
     100% { transform: translate(15px, 10px) scale(1.03); }
   }
 
-  /* ══════════════════════════════════════════════
-       FOOTER
-    ══════════════════════════════════════════════ */
-    .page-footer {
-      max-width: 920px;
-      margin: 64px auto 0;
-      padding-top: 28px;
-      border-top: 1px solid var(--border);
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 6px 4px;
-      align-items: center;
-    }
-
-    .footer-nav a {
-      color: var(--accent);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .footer-nav a:hover { color: var(--blue); }
-
-    .footer-nav span { opacity: 0.4; }
-
-    .page-footer .footer-meta {
-      opacity: 0.5;
-    }
-
-    .page-footer a {
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .page-footer a:hover { color: var(--accent); }
+  /* ── Footer ── */
+      .page-footer {
+        max-width: 720px;
+        margin: 64px auto 0;
+        padding-top: 28px;
+        border-top: 1px solid var(--border);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+      }
+      .footer-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px 4px;
+        align-items: center;
+      }
+      .footer-nav a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .footer-nav a:hover {
+        color: var(--blue);
+      }
+      .footer-nav span {
+        opacity: 0.75;
+      }
+      .footer-meta {
+        opacity: 0.5;
+      }
+      .footer-meta a {
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .footer-meta a:hover {
+        color: var(--accent);
+      }
 
   </style>
 </head>
@@ -609,7 +606,7 @@
   <header class="page-header">
     <div class="wordmark">Belmont University · AET</div>
     <h1>Studio Schedule</h1>
-    <div class="meta">Generated Sat, Jul 11, 8:00 PM · <span id="session-count"></span></div>
+    <div class="meta">Generated Sat, Jul 11, 8:30 PM · <span id="session-count"></span></div>
     <div class="tabs">
   <button class="tab-btn active" data-date="2026-07-11" onclick="filterByDate('2026-07-11')">Today</button>
   <button class="tab-btn" data-date="2026-07-12" onclick="filterByDate('2026-07-12')">Tomorrow</button>
@@ -726,7 +723,7 @@
 </div>
 
     <footer class="page-footer">
-      <nav class="footer-nav a">
+      <nav class="footer-nav">
         <a href="https://bradwintersmusic-cloud.github.io/studio-home/">Studio Hub</a>
         <span>|</span>
         <a href="https://bradwintersmusic-cloud.github.io/studio-news/">AET News</a>
