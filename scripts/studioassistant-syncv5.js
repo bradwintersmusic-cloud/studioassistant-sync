@@ -4,17 +4,17 @@
 // Run: node studioassistant-sync.js
 // Requires: STUDIOASSISTANT_API_TOKEN in your .env file
 
-require('dotenv').config();
+require("dotenv").config();
 
-const fs   = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // ─── Config ────────────────────────────────────────────────────────────────────
 
-const BASE_URL     = 'https://app.studioassistant.io';
-const FACILITY_IDS = [7807, 7808];    // 34MSE, BMRC
-const TIMEZONE     = 'America/Chicago';
-const OUTPUT_FILE  = path.join(__dirname, '../index.html');
+const BASE_URL = "https://app.studioassistant.io";
+const FACILITY_IDS = [7807, 7808]; // 34MSE, BMRC
+const TIMEZONE = "America/Chicago";
+const OUTPUT_FILE = path.join(__dirname, "../index.html");
 
 // Date window: pulls sessions starting today (UTC midnight) for the next N days.
 // Increase RANGE_DAYS if you want a wider lookahead.
@@ -24,18 +24,19 @@ const RANGE_DAYS = 2;
 
 function getDateRange() {
   const now = new Date();
-  const dateStr = now.toLocaleDateString('en-CA', { timeZone: TIMEZONE }); // "2026-06-24"
+  const dateStr = now.toLocaleDateString("en-CA", { timeZone: TIMEZONE }); // "2026-06-24"
 
   // Get Chicago's actual UTC offset for today (handles CDT vs CST automatically)
-  const parts = new Intl.DateTimeFormat('en-US', {
+  const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: TIMEZONE,
-    timeZoneName: 'shortOffset'
+    timeZoneName: "shortOffset",
   }).formatToParts(now);
-  const offsetStr = parts.find(p => p.type === 'timeZoneName').value; // "GMT-5" or "GMT-6"
-  const offsetHours = parseInt(offsetStr.replace('GMT', '')) || -5;
-  const offsetFormatted = offsetHours >= 0
-    ? `+${String(offsetHours).padStart(2, '0')}:00`
-    : `-${String(Math.abs(offsetHours)).padStart(2, '0')}:00`;
+  const offsetStr = parts.find((p) => p.type === "timeZoneName").value; // "GMT-5" or "GMT-6"
+  const offsetHours = parseInt(offsetStr.replace("GMT", "")) || -5;
+  const offsetFormatted =
+    offsetHours >= 0
+      ? `+${String(offsetHours).padStart(2, "0")}:00`
+      : `-${String(Math.abs(offsetHours)).padStart(2, "0")}:00`;
 
   const start = new Date(`${dateStr}T00:00:00${offsetFormatted}`);
   const end = new Date(start);
@@ -44,52 +45,53 @@ function getDateRange() {
 }
 
 function formatTime(iso) {
-  return new Date(iso).toLocaleTimeString('en-US', {
+  return new Date(iso).toLocaleTimeString("en-US", {
     timeZone: TIMEZONE,
-    hour: 'numeric',
-    minute: '2-digit',
+    hour: "numeric",
+    minute: "2-digit",
     hour12: true,
   });
 }
 
 function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('en-US', {
+  return new Date(iso).toLocaleDateString("en-US", {
     timeZone: TIMEZONE,
-    weekday: 'short',
-    month:   'short',
-    day:     'numeric',
+    weekday: "short",
+    month: "short",
+    day: "numeric",
   });
 }
 
 function escapeHtml(str) {
-  return String(str ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 // ─── API ───────────────────────────────────────────────────────────────────────
 
 async function login() {
   const token = process.env.STUDIOASSISTANT_API_TOKEN;
-  if (!token) throw new Error('STUDIOASSISTANT_API_TOKEN is not set in .env');
+  if (!token) throw new Error("STUDIOASSISTANT_API_TOKEN is not set in .env");
 
-  const res  = await fetch(`${BASE_URL}/api/auth/api-login`, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ apiToken: token }),
+  const res = await fetch(`${BASE_URL}/api/auth/api-login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ apiToken: token }),
   });
   const data = await res.json();
-  if (!data.success) throw new Error(`Login failed: ${JSON.stringify(data.message)}`);
-  console.log('✓ Authenticated');
+  if (!data.success)
+    throw new Error(`Login failed: ${JSON.stringify(data.message)}`);
+  console.log("✓ Authenticated");
   return data.accessToken;
 }
 
 async function fetchFacilitySessions(accessToken, facilityId, start, end) {
   const url = `${BASE_URL}/api/studio/${facilityId}/session/calendar?start=${start}&end=${end}`;
-  const res  = await fetch(url, {
-    headers: { 'Authorization': `Bearer ${accessToken}` },
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
   const data = await res.json();
   if (!data.success) {
@@ -104,34 +106,41 @@ async function fetchFacilitySessions(accessToken, facilityId, start, end) {
 // ─── Data processing ───────────────────────────────────────────────────────────
 
 function processSessions(raw, start, end) {
-  return raw
-    // Drop anything without a booking (blackouts, placeholders, etc.)
-    .filter(s => {
-  if (s.type === 'i' && !s.stamp?.contact_name) return false;
-  if (new Date(s.start) < new Date(start)) return false;
-  if (new Date(s.start) >= new Date(end)) return false;
-  return s.stamp?.contact_name || s.stamp?.service === 'Class' || s.snippet;
-})
-    // Shape each session into what we need
-    .map(s => ({
-      id:             s.id,
-      facility:       s.stamp.studio   ?? 'Unknown Facility',
-      studio:         s.stamp.room     ?? 'Unknown Room',
-      student:        s.stamp.contact_name || s.snippet || '—',
-      start:          s.start,
-      end:            s.end,
-      dateKey:        new Date(s.start).toLocaleDateString('en-CA', { timeZone: TIMEZONE }),
-      sessionType:    s.stamp?.project || s.stamp?.service || '',
-      dateLabel:      formatDate(s.start),
-      startLabel:     formatTime(s.start),
-      endLabel:       formatTime(s.end),
-    }))
-    // Sort: 1) Facility  2) Studio  3) Start time
-    .sort((a, b) => {
-      if (a.facility !== b.facility) return a.facility.localeCompare(b.facility);
-      if (a.studio   !== b.studio)   return a.studio.localeCompare(b.studio);
-      return new Date(a.start) - new Date(b.start);
-    });
+  return (
+    raw
+      // Drop anything without a booking (blackouts, placeholders, etc.)
+      .filter((s) => {
+        if (s.type === "i" && !s.stamp?.contact_name) return false;
+        if (new Date(s.start) < new Date(start)) return false;
+        if (new Date(s.start) >= new Date(end)) return false;
+        return (
+          s.stamp?.contact_name || s.stamp?.service === "Class" || s.snippet
+        );
+      })
+      // Shape each session into what we need
+      .map((s) => ({
+        id: s.id,
+        facility: s.stamp.studio ?? "Unknown Facility",
+        studio: s.stamp.room ?? "Unknown Room",
+        student: s.stamp.contact_name || s.snippet || "—",
+        start: s.start,
+        end: s.end,
+        dateKey: new Date(s.start).toLocaleDateString("en-CA", {
+          timeZone: TIMEZONE,
+        }),
+        sessionType: s.stamp?.project || s.stamp?.service || "",
+        dateLabel: formatDate(s.start),
+        startLabel: formatTime(s.start),
+        endLabel: formatTime(s.end),
+      }))
+      // Sort: 1) Facility  2) Studio  3) Start time
+      .sort((a, b) => {
+        if (a.facility !== b.facility)
+          return a.facility.localeCompare(b.facility);
+        if (a.studio !== b.studio) return a.studio.localeCompare(b.studio);
+        return new Date(a.start) - new Date(b.start);
+      })
+  );
 }
 
 // ─── HTML generation ──────────────────────────────────────────────────────────
@@ -141,22 +150,29 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
   const byFacility = {};
   for (const s of sessions) {
     if (!byFacility[s.facility]) byFacility[s.facility] = {};
-    if (!byFacility[s.facility][s.studio]) byFacility[s.facility][s.studio] = [];
+    if (!byFacility[s.facility][s.studio])
+      byFacility[s.facility][s.studio] = [];
     byFacility[s.facility][s.studio].push(s);
   }
 
-  const facilityHTML = Object.entries(byFacility).map(([facility, studios]) => {
-    const studiosHTML = Object.entries(studios).map(([studio, items]) => {
-      const rowsHTML = items.map(s => `
+  const facilityHTML = Object.entries(byFacility)
+    .map(([facility, studios]) => {
+      const studiosHTML = Object.entries(studios)
+        .map(([studio, items]) => {
+          const rowsHTML = items
+            .map(
+              (s) => `
             <tr data-date="${s.dateKey}">
               <td class="col-date">${escapeHtml(s.dateLabel)}</td>
               <td class="col-name">${escapeHtml(s.student)}</td>
               <td class="col-type">${escapeHtml(s.sessionType)}</td>
               <td class="col-time">${escapeHtml(s.startLabel)}</td>
               <td class="col-time">${escapeHtml(s.endLabel)}</td>
-            </tr>`).join('');
+            </tr>`,
+            )
+            .join("");
 
-      return `
+          return `
             <div class="studio-block">
         <div class="studio-header">${escapeHtml(studio)}</div>
         <div class="table-scroll">
@@ -175,9 +191,10 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
         </table>
         </div>
     </div>`;
-    }).join('');
+        })
+        .join("");
 
-    return `
+      return `
       <section class="facility-block">
         <div class="facility-header" onclick="toggleFacility(this)" style="cursor:pointer;">
           <span class="dot"></span>${escapeHtml(facility)}
@@ -187,11 +204,13 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
         ${studiosHTML}
         </div>
       </section>`;
-  }).join('');
+    })
+    .join("");
 
-  const body = sessions.length === 0
-    ? '<p class="empty">No sessions found for this date range.</p>'
-    : facilityHTML;
+  const body =
+    sessions.length === 0
+      ? '<p class="empty">No sessions found for this date range.</p>'
+      : facilityHTML;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -610,55 +629,52 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
     100% { transform: translate(15px, 10px) scale(1.03); }
   }
 
-  /* ══════════════════════════════════════════════
-       FOOTER
-    ══════════════════════════════════════════════ */
-    .page-footer {
-      max-width: 920px;
-      margin: 64px auto 0;
-      padding-top: 28px;
-      border-top: 1px solid var(--border);
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 6px 4px;
-      align-items: center;
-    }
-
-    .footer-nav a {
-      color: var(--accent);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .footer-nav a:hover { color: var(--blue); }
-
-    .footer-nav span { opacity: 0.4; }
-
-    .page-footer .footer-meta {
-      opacity: 0.5;
-    }
-
-    .page-footer a {
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .page-footer a:hover { color: var(--accent); }
+  /* ── Footer ── */
+      .page-footer {
+        max-width: 720px;
+        margin: 64px auto 0;
+        padding-top: 28px;
+        border-top: 1px solid var(--border);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+      }
+      .footer-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px 4px;
+        align-items: center;
+      }
+      .footer-nav a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .footer-nav a:hover {
+        color: var(--blue);
+      }
+      .footer-nav span {
+        opacity: 0.75;
+      }
+      .footer-meta {
+        opacity: 0.5;
+      }
+      .footer-meta a {
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .footer-meta a:hover {
+        color: var(--accent);
+      }
 
   </style>
 </head>
@@ -848,7 +864,7 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
 </div>
 
     <footer class="page-footer">
-      <nav class="footer-nav a">
+      <nav class="footer-nav">
         <a href="https://bradwintersmusic-cloud.github.io/studio-home/">Studio Hub</a>
         <span>|</span>
         <a href="https://bradwintersmusic-cloud.github.io/studio-news/">AET News</a>
@@ -894,27 +910,31 @@ async function main() {
   const sessions = processSessions(allRaw, start, end);
   console.log(`✓ ${sessions.length} sessions after filtering\n`);
 
-  const generatedAt = new Date().toLocaleString('en-US', {
+  const generatedAt = new Date().toLocaleString("en-US", {
     timeZone: TIMEZONE,
-    weekday: 'short',
-    month:   'short',
-    day:     'numeric',
-    hour:    'numeric',
-    minute:  '2-digit',
-    hour12:  true,
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
   });
 
-  const todayKey = new Date().toLocaleDateString('en-CA', { timeZone: TIMEZONE });
+  const todayKey = new Date().toLocaleDateString("en-CA", {
+    timeZone: TIMEZONE,
+  });
   const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowKey = tomorrow.toLocaleDateString('en-CA', { timeZone: TIMEZONE });
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowKey = tomorrow.toLocaleDateString("en-CA", {
+    timeZone: TIMEZONE,
+  });
 
   const html = buildHTML(sessions, generatedAt, todayKey, tomorrowKey);
-    fs.writeFileSync(OUTPUT_FILE, html, 'utf8');
+  fs.writeFileSync(OUTPUT_FILE, html, "utf8");
   console.log(`✓ Schedule written to ${OUTPUT_FILE}`);
 }
 
-main().catch(err => {
-  console.error('\n✗ Error:', err.message);
+main().catch((err) => {
+  console.error("\n✗ Error:", err.message);
   process.exit(1);
 });
