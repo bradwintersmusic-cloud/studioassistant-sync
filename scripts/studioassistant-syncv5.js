@@ -250,7 +250,7 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
 
     /* ── Page header ── */
     .page-header {
-      max-width: 920px;
+      max-width: 1100px;
       margin: 0 auto 52px;
       padding-bottom: 28px;
       border-bottom: 1px solid var(--border);
@@ -303,7 +303,7 @@ function buildHTML(sessions, generatedAt, todayKey, tomorrowKey) {
     }
 
     /* ── Content ── */
-    .content { max-width: 920px; margin: 0 auto; }
+    .content { max-width: 1100px; margin: 0 auto; }
 
     /* ── Facility ── */
     .facility-block { margin-bottom: 52px; }
